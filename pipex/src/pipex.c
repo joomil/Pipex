@@ -6,7 +6,7 @@
 /*   By: jmilesi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 12:04:09 by jmilesi           #+#    #+#             */
-/*   Updated: 2023/10/20 12:09:58 by jmilesi          ###   ########.fr       */
+/*   Updated: 2023/10/30 10:58:32 by jmilesi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,40 @@ int	main(int ac, char **av, char **env)
 	return (0);
 }
 
-void	child(char **av, int p_fd, char **env)
+void	child(char **av, int *p_fd, char **env)
 {
 	int		fd;
 
 	fd = open_file(av[1], 0);
+	dup2(fd, 0);
+	dup2(p_fd[1], 1);
+	close(p_fd[0]);
+	exec(av[2], env);
+}
+
+void	parent(char **av, int *p_fd, char **env)
+{
+	int		fd;
+
+	fd = open_file(av[4], 1);
+	dup2(fd, 1);
+	dup2(p_fd[0], 0);
+	close(p_fd[1]);
+	exec(av[3], env);
+}
+
+void	exec(char *cmd, char **env)
+{
+	char	**s_cmd;
+	char	*path;
+
+	s_cmd = ft_split(cmd, ' ');
+	path = get_path(s_cmd[0], env);
+	if (execve(path, s_cmd, env) == -1)
+	{
+		ft_putstr_fd("pipex: command not found: ", 2);
+		ft_putendl_fd(s_cmd[0], 2);
+		ft_free_tab(s_cmd);
+		exit(0);
+	}
 }
