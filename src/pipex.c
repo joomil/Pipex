@@ -6,7 +6,7 @@
 /*   By: jmilesi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 12:04:09 by jmilesi           #+#    #+#             */
-/*   Updated: 2023/10/30 15:39:13 by jmilesi          ###   ########.fr       */
+/*   Updated: 2023/11/04 12:51:41 by jmilesi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,9 @@ void	exec(char *cmd, char **env)
 	path = get_path(s_cmd[0], env);
 	if (execve(path, s_cmd, env) == -1)
 	{
-		perror("Error executing command");
+		errno = EACCES;
+		perror(strerror(errno));
 		ft_free_tab(s_cmd);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }

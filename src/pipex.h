@@ -6,7 +6,7 @@
 /*   By: jmilesi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 12:10:04 by jmilesi           #+#    #+#             */
-/*   Updated: 2023/10/30 10:57:47 by jmilesi          ###   ########.fr       */
+/*   Updated: 2023/11/04 12:52:05 by jmilesi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <sys/wait.h>
 
 void	exit_handler(int n_exit);
 int		open_file(char *file, int in_or_out);
 void	ft_free_tab(char **tab);
-char	*my_getenv(char *name, char **env);
+char	*ft_getenv(char *name, char **env);
 char	*get_path(char *cmd, char **env);
 void	child(char **av, int *p_fd, char **env);
 void	parent(char **av, int *p_fd, char **env);

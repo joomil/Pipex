@@ -6,7 +6,7 @@
 /*   By: jmilesi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 12:27:44 by jmilesi           #+#    #+#             */
-/*   Updated: 2023/10/30 15:36:49 by jmilesi          ###   ########.fr       */
+/*   Updated: 2023/11/04 12:36:04 by jmilesi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	exit_handler(int n_exit)
 	if (n_exit == 1)
 	{
 		errno = EINVAL;
-		perror("./pipex infile cmd cmd outfile\n");
-		exit(1);
+		perror(strerror(errno));
+		exit(EXIT_FAILURE);
 	}
-	exit(0);
+	exit(EXIT_FAILURE);
 }
 
 int	open_file(char *file, int in_or_out)
@@ -33,8 +33,9 @@ int	open_file(char *file, int in_or_out)
 		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (ret == -1)
 	{
-		perror("Error opening file");
-		exit(1);
+		errno = EIO;
+		perror(strerror(errno));
+		exit(EXIT_FAILURE);
 	}
 	return (ret);
 }
@@ -52,7 +53,7 @@ void	ft_free_tab(char **tab)
 	free(tab);
 }
 
-char	*my_getenv(char *name, char **env)
+char	*ft_getenv(char *name, char **env)
 {
 	int		i;
 	int		j;
@@ -85,7 +86,7 @@ char	*get_path(char *cmd, char **env)
 	char	**s_cmd;
 
 	i = -1;
-	allpath = ft_split(my_getenv("PATH", env), ':');
+	allpath = ft_split(ft_getenv("PATH", env), ':');
 	s_cmd = ft_split(cmd, ' ');
 	while (allpath[++i])
 	{
